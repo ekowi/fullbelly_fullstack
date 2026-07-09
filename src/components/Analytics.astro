@@ -1,0 +1,66 @@
+---
+// Central analytics loader (goes in <head>). OFF by default — a tag only loads
+// when its ID/domain is set. Source of truth = CMS (site_settings, PIC-editable);
+// .env PUBLIC_* is an optional fallback for dev/staging. CMS wins.
+//
+// ⚠️ GTM / GA4 / Meta Pixel pakai cookie → butuh cookie-consent banner (UU PDP).
+//    Plausible / Umami cookieless.
+import type { SiteSettings } from "../lib/directus";
+
+interface Props {
+  settings: SiteSettings;
+}
+const { settings } = Astro.props;
+const env = import.meta.env;
+
+const gtmId = settings.gtm_id || env.PUBLIC_GTM_ID || "";
+const ga4Id = settings.ga4_id || env.PUBLIC_GA4_ID || "";
+const metaPixelId = settings.meta_pixel_id || env.PUBLIC_META_PIXEL_ID || "";
+const plausibleDomain = settings.plausible_domain || env.PUBLIC_PLAUSIBLE_DOMAIN || "";
+const plausibleSrc = env.PUBLIC_PLAUSIBLE_SRC || "https://plausible.io/js/script.js";
+const umamiSrc = settings.umami_src || env.PUBLIC_UMAMI_SRC || "";
+const umamiWebsiteId = settings.umami_website_id || env.PUBLIC_UMAMI_WEBSITE_ID || "";
+---
+
+{/* Google Tag Manager */}
+{
+  gtmId && (
+    <script
+      is:inline
+      set:html={`(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src='https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);})(window,document,'script','dataLayer','${gtmId}');`}
+    />
+  )
+}
+
+{/* Google Analytics 4 (standalone; skip if you route GA4 through GTM) */}
+{
+  ga4Id && (
+    <Fragment>
+      <script is:inline async src={`https://www.googletagmanager.com/gtag/js?id=${ga4Id}`} />
+      <script
+        is:inline
+        set:html={`window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','${ga4Id}');`}
+      />
+    </Fragment>
+  )
+}
+
+{/* Meta (Facebook) Pixel */}
+{
+  metaPixelId && (
+    <script
+      is:inline
+      set:html={`!function(f,b,e,v,n,t,s){if(f.fbq)return;n=f.fbq=function(){n.callMethod?n.callMethod.apply(n,arguments):n.queue.push(arguments)};if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';n.queue=[];t=b.createElement(e);t.async=!0;t.src=v;s=b.getElementsByTagName(e)[0];s.parentNode.insertBefore(t,s)}(window,document,'script','https://connect.facebook.net/en_US/fbevents.js');fbq('init','${metaPixelId}');fbq('track','PageView');`}
+    />
+  )
+}
+
+{/* Plausible (cookieless) */}
+{plausibleDomain && <script is:inline defer data-domain={plausibleDomain} src={plausibleSrc} />}
+
+{/* Umami (cookieless) */}
+{
+  umamiSrc && umamiWebsiteId && (
+    <script is:inline defer src={umamiSrc} data-website-id={umamiWebsiteId} />
+  )
+}

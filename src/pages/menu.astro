@@ -1,0 +1,139 @@
+---
+import Layout from "../layouts/Layout.astro";
+import ImagePlaceholder from "../components/ImagePlaceholder.astro";
+import { getMenu, formatRupiah, imageFor, type MenuItem } from "../lib/directus";
+
+const items = await getMenu();
+const inCategory = (c: MenuItem["category"]) =>
+  items.filter((i) => i.category === c);
+
+const signatureDishes = inCategory("signature").map((d) => ({
+  name: d.name,
+  price: formatRupiah(d.price),
+  desc: d.description,
+  photo: imageFor(d),
+  alt: d.name,
+}));
+const cafeSpecials = inCategory("cafe").map((d) => ({
+  name: d.name,
+  price: formatRupiah(d.price),
+  desc: d.description,
+  photo: imageFor(d),
+  alt: d.name,
+}));
+const drinks = inCategory("drinks").map((d) => ({
+  name: d.name,
+  desc: d.description,
+  price: formatRupiah(d.price),
+}));
+---
+
+<Layout
+  activeNav="menu"
+  title="Menu — Fullbelly Bogor"
+  description="Signature dishes, cafe specials, and drinks at Fullbelly Bogor — bold flavors with sophisticated presentation."
+>
+  <!-- Page hero -->
+  <section class="px-6 pt-20 pb-14 text-center lg:px-10 lg:pt-28">
+    <h1 class="text-4xl font-extrabold text-white sm:text-5xl md:text-6xl lg:text-7xl">
+      Culinary Excellence
+    </h1>
+    <p class="mx-auto mt-5 max-w-2xl text-white/60">
+      Experience our carefully curated selection of dishes, blending bold flavors with
+      sophisticated presentation.
+    </p>
+  </section>
+
+  <div class="mx-auto max-w-6xl space-y-14 px-6 pb-24 sm:space-y-20 lg:px-10 lg:pb-32">
+    <!-- Signature Dishes -->
+    <section>
+      <div class="flex items-center gap-6">
+        <h2 class="text-2xl font-extrabold whitespace-nowrap text-white sm:text-3xl lg:text-4xl">
+          Signature Dishes
+        </h2>
+        <span class="h-px flex-1 bg-white/15"></span>
+      </div>
+
+      <div class="mt-10 grid gap-6 sm:grid-cols-2">
+        {
+          signatureDishes.map((dish) => (
+            <article class="group overflow-hidden rounded-2xl ring-1 ring-white/10 transition-all duration-300 hover:ring-white/25">
+              <div class="h-72 overflow-hidden">
+                <ImagePlaceholder
+                  label={dish.name}
+                  src={dish.photo}
+                  alt={dish.alt}
+                  class="h-full w-full transition-transform duration-700 ease-out group-hover:scale-105"
+                />
+              </div>
+              <div class="bg-surface p-6 sm:p-7">
+                <div class="sm:flex sm:items-baseline sm:justify-between sm:gap-4">
+                  <h3 class="text-2xl font-bold text-white">{dish.name}</h3>
+                  <span class="mt-1 block font-display font-semibold whitespace-nowrap text-brand sm:mt-0">
+                    {dish.price}
+                  </span>
+                </div>
+                <p class="mt-3 text-sm leading-relaxed text-white/60">{dish.desc}</p>
+              </div>
+            </article>
+          ))
+        }
+      </div>
+    </section>
+
+    <!-- Cafe Specials -->
+    <section>
+      <div class="flex items-center gap-6">
+        <h2 class="text-2xl font-extrabold whitespace-nowrap text-white sm:text-3xl lg:text-4xl">
+          Cafe Specials
+        </h2>
+        <span class="h-px flex-1 bg-white/15"></span>
+      </div>
+
+      <div class="mt-10 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+        {
+          cafeSpecials.map((item) => (
+            <article class="flex gap-4 rounded-xl bg-surface p-4 ring-1 ring-white/10 transition-all duration-300 hover:-translate-y-1 hover:ring-white/25">
+              <div class="h-16 w-16 shrink-0 overflow-hidden rounded-lg sm:h-20 sm:w-20">
+                <ImagePlaceholder label={item.name} src={item.photo} alt={item.alt} class="h-full w-full" />
+              </div>
+              <div class="min-w-0">
+                <div class="sm:flex sm:items-baseline sm:justify-between sm:gap-3">
+                  <h3 class="font-semibold text-white">{item.name}</h3>
+                  <span class="mt-0.5 block font-display text-sm font-semibold whitespace-nowrap text-brand sm:mt-0">
+                    {item.price}
+                  </span>
+                </div>
+                <p class="mt-1 text-sm text-white/50">{item.desc}</p>
+              </div>
+            </article>
+          ))
+        }
+      </div>
+    </section>
+
+    <!-- Drinks -->
+    <section>
+      <div class="flex items-center gap-6">
+        <h2 class="text-2xl font-extrabold whitespace-nowrap text-white sm:text-3xl lg:text-4xl">Drinks</h2>
+        <span class="h-px flex-1 bg-white/15"></span>
+      </div>
+
+      <div class="mt-10 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+        {
+          drinks.map((drink) => (
+            <article class="flex items-start justify-between gap-3 rounded-xl bg-surface px-5 py-4 ring-1 ring-white/10 transition-all duration-300 hover:-translate-y-1 hover:ring-white/25">
+              <div class="min-w-0">
+                <h3 class="font-semibold text-white">{drink.name}</h3>
+                <p class="mt-0.5 text-xs text-white/50">{drink.desc}</p>
+              </div>
+              <span class="font-display text-sm font-semibold whitespace-nowrap text-brand">
+                {drink.price}
+              </span>
+            </article>
+          ))
+        }
+      </div>
+    </section>
+  </div>
+</Layout>

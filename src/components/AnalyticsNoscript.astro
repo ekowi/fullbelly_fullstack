@@ -1,0 +1,42 @@
+---
+// GTM + Meta Pixel <noscript> fallbacks — must sit right after <body> opens.
+// Off unless the matching ID is set (CMS site_settings, or .env fallback).
+import type { SiteSettings } from "../lib/directus";
+
+interface Props {
+  settings: SiteSettings;
+}
+const { settings } = Astro.props;
+const env = import.meta.env;
+
+const gtmId = settings.gtm_id || env.PUBLIC_GTM_ID || "";
+const metaPixelId = settings.meta_pixel_id || env.PUBLIC_META_PIXEL_ID || "";
+---
+
+{
+  gtmId && (
+    <noscript>
+      <iframe
+        src={`https://www.googletagmanager.com/ns.html?id=${gtmId}`}
+        height="0"
+        width="0"
+        style="display:none;visibility:hidden"
+        title="gtm"
+      />
+    </noscript>
+  )
+}
+
+{
+  metaPixelId && (
+    <noscript>
+      <img
+        height="1"
+        width="1"
+        style="display:none"
+        src={`https://www.facebook.com/tr?id=${metaPixelId}&ev=PageView&noscript=1`}
+        alt=""
+      />
+    </noscript>
+  )
+}

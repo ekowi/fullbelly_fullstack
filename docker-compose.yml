@@ -1,0 +1,53 @@
+# Fullbelly Bogor — CMS stack (Postgres + Directus)
+# Local dev + parity with the target 2 vCPU / 4GB VPS (mem_limit per service).
+# Start:  docker compose up -d
+# Logs:   docker compose logs -f directus
+# Stop:   docker compose down        (add -v to also wipe the database volume)
+
+services:
+  database:
+    image: postgres:16-alpine
+    restart: unless-stopped
+    volumes:
+      - db_data:/var/lib/postgresql/data
+    environment:
+      POSTGRES_USER: ${DB_USER}
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
+      POSTGRES_DB: ${DB_DATABASE}
+    healthcheck:
+      test: ["CMD", "pg_isready", "-U", "${DB_USER}", "-d", "${DB_DATABASE}"]
+      interval: 10s
+      timeout: 5s
+      retries: 6
+    mem_limit: 512m
+
+  directus:
+    image: directus/directus:11
+    restart: unless-stopped
+    ports:
+      - "8055:8055"
+    volumes:
+      - directus_uploads:/directus/uploads
+    depends_on:
+      database:
+        condition: service_healthy
+    environment:
+      KEY: ${DIRECTUS_KEY}
+      SECRET: ${DIRECTUS_SECRET}
+      DB_CLIENT: pg
+      DB_HOST: database
+      DB_PORT: 5432
+      DB_DATABASE: ${DB_DATABASE}
+      DB_USER: ${DB_USER}
+      DB_PASSWORD: ${DB_PASSWORD}
+      ADMIN_EMAIL: ${ADMIN_EMAIL}
+      ADMIN_PASSWORD: ${ADMIN_PASSWORD}
+      PUBLIC_URL: http://localhost:8055
+      # Dev CORS: allow the Astro dev server to fetch the API from the browser.
+      CORS_ENABLED: "true"
+      CORS_ORIGIN: "true"
+    mem_limit: 768m
+
+volumes:
+  db_data:
+  directus_uploads:

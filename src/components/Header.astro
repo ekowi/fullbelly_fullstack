@@ -1,0 +1,119 @@
+---
+import { waUrl, type SiteSettings } from "../lib/directus";
+
+interface Props {
+  active?: "home" | "menu" | "sports" | "gallery";
+  settings: SiteSettings;
+}
+const { active = "home", settings } = Astro.props;
+
+const navItems = [
+  { label: "Home", href: "/", key: "home" },
+  { label: "Menu", href: "/menu", key: "menu" },
+  { label: "Sports", href: "/sports", key: "sports" },
+  { label: "Gallery", href: "/gallery", key: "gallery" },
+];
+
+// No dedicated booking page — the "Book Now" CTA opens WhatsApp (number from CMS site_settings).
+const bookingUrl = waUrl(settings.whatsapp_number, "Halo Fullbelly Bogor, saya ingin booking");
+---
+
+<header class="sticky top-0 z-50 border-b border-white/10 bg-ink/80 backdrop-blur-xl">
+  <div class="mx-auto flex max-w-7xl items-center justify-between px-6 py-4 lg:px-10">
+    <a
+      href="/"
+      class="font-display text-xl font-extrabold tracking-tight text-brand transition-opacity hover:opacity-80"
+    >
+      Fullbelly Bogor
+    </a>
+
+    <nav class="hidden items-center gap-9 text-sm font-medium md:flex">
+      {
+        navItems.map((item) => (
+          <a
+            href={item.href}
+            class={`group relative py-1 transition-colors ${
+              active === item.key ? "text-brand" : "text-white/70 hover:text-white"
+            }`}
+          >
+            {item.label}
+            <span
+              class={`absolute -bottom-0.5 left-0 h-0.5 rounded-full bg-brand transition-all duration-300 ${
+                active === item.key ? "w-full" : "w-0 group-hover:w-full"
+              }`}
+            />
+          </a>
+        ))
+      }
+    </nav>
+
+    <div class="flex items-center gap-3">
+      <a
+        href={bookingUrl}
+        target="_blank"
+        rel="noopener"
+        class="hidden rounded-full bg-brand px-5 py-2.5 text-sm font-semibold text-white shadow-lg shadow-brand/20 transition-all hover:bg-brand-dark active:translate-y-px md:inline-flex"
+      >
+        Book Now
+      </a>
+
+      <button
+        id="mobile-menu-button"
+        type="button"
+        aria-label="Toggle menu"
+        aria-expanded="false"
+        aria-controls="mobile-menu"
+        class="flex h-9 w-9 items-center justify-center rounded-full border border-white/15 text-white/80 md:hidden"
+      >
+        <svg id="icon-menu" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" class="h-5 w-5">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M4 6h16M4 12h16M4 18h16" />
+        </svg>
+        <svg id="icon-close" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" class="hidden h-5 w-5">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M6 6l12 12M18 6L6 18" />
+        </svg>
+      </button>
+    </div>
+  </div>
+
+  <nav
+    id="mobile-menu"
+    class="hidden flex-col gap-1 border-t border-white/10 px-6 py-4 text-sm font-medium md:hidden"
+  >
+    {
+      navItems.map((item) => (
+        <a
+          href={item.href}
+          class={`rounded-lg px-3 py-2.5 transition-colors ${
+            active === item.key ? "bg-white/10 text-brand" : "text-white/80 hover:bg-white/5"
+          }`}
+        >
+          {item.label}
+        </a>
+      ))
+    }
+    <a
+      href={bookingUrl}
+      target="_blank"
+      rel="noopener"
+      class="mt-2 rounded-full bg-brand px-5 py-3 text-center font-semibold text-white shadow-lg shadow-brand/20 transition-all hover:bg-brand-dark active:translate-y-px"
+    >
+      Book Now
+    </a>
+  </nav>
+</header>
+
+<script>
+  const button = document.getElementById("mobile-menu-button");
+  const menu = document.getElementById("mobile-menu");
+  const iconMenu = document.getElementById("icon-menu");
+  const iconClose = document.getElementById("icon-close");
+
+  button?.addEventListener("click", () => {
+    const nowHidden = menu?.classList.toggle("hidden");
+    const isOpen = !nowHidden;
+    menu?.classList.toggle("flex", isOpen);
+    iconMenu?.classList.toggle("hidden", isOpen);
+    iconClose?.classList.toggle("hidden", !isOpen);
+    button.setAttribute("aria-expanded", String(isOpen));
+  });
+</script>

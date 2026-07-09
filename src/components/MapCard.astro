@@ -1,0 +1,102 @@
+---
+import "leaflet/dist/leaflet.css";
+
+interface Props {
+  lat: number;
+  lng: number;
+  label: string;
+  directionsUrl: string;
+  class?: string;
+}
+const { lat, lng, label, directionsUrl, class: className = "" } = Astro.props;
+---
+
+<div class={`relative isolate overflow-hidden rounded-2xl ring-1 ring-white/10 ${className}`}>
+  <div
+    class="fb-map h-full min-h-[340px] w-full"
+    data-lat={lat}
+    data-lng={lng}
+    data-label={label}
+  >
+  </div>
+
+  <a
+    href={directionsUrl}
+    target="_blank"
+    rel="noopener"
+    class="pointer-events-auto absolute bottom-4 left-1/2 z-[1000] inline-flex -translate-x-1/2 items-center gap-2 rounded-full bg-brand px-5 py-2.5 text-sm font-semibold text-white shadow-xl shadow-brand/30 transition-all hover:bg-brand-dark active:translate-y-px"
+  >
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" class="h-4 w-4">
+      <path stroke-linecap="round" stroke-linejoin="round" d="M12 2l9 4.5-9 15-9-15L12 2z" />
+    </svg>
+    Get Directions
+  </a>
+</div>
+
+<script>
+  import L from "leaflet";
+
+  document.querySelectorAll<HTMLElement>(".fb-map").forEach((el) => {
+    const lat = Number(el.dataset.lat);
+    const lng = Number(el.dataset.lng);
+    if (!Number.isFinite(lat) || !Number.isFinite(lng)) return;
+
+    const map = L.map(el, {
+      center: [lat, lng],
+      zoom: 15,
+      scrollWheelZoom: false, // don't hijack page scroll
+      zoomControl: true,
+      attributionControl: true,
+    });
+
+    L.tileLayer("https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png", {
+      attribution: '&copy; OpenStreetMap &copy; CARTO',
+      subdomains: "abcd",
+      maxZoom: 20,
+    }).addTo(map);
+
+    // Brand-orange teardrop pin (divIcon avoids Leaflet's broken image-path issue)
+    const icon = L.divIcon({
+      className: "fb-pin-wrap",
+      html: '<span class="fb-pin"></span>',
+      iconSize: [26, 26],
+      iconAnchor: [13, 26],
+      popupAnchor: [0, -24],
+    });
+
+    L.marker([lat, lng], { icon }).addTo(map).bindPopup(el.dataset.label || "");
+  });
+</script>
+
+<style is:global>
+  .fb-map {
+    background: #141210;
+  }
+  /* Brand pin */
+  .fb-pin {
+    display: block;
+    width: 20px;
+    height: 20px;
+    background: #f26a1b;
+    border: 2px solid rgba(255, 255, 255, 0.85);
+    border-radius: 50% 50% 50% 0;
+    transform: rotate(-45deg);
+    box-shadow: 0 0 0 6px rgba(242, 106, 27, 0.25);
+  }
+  /* Dark-theme Leaflet chrome */
+  .fb-map .leaflet-control-zoom a {
+    background: #1e1b19;
+    color: #fff;
+    border-color: rgba(255, 255, 255, 0.12);
+  }
+  .fb-map .leaflet-control-zoom a:hover {
+    background: #2a2624;
+  }
+  .fb-map .leaflet-control-attribution {
+    background: rgba(10, 10, 10, 0.6);
+    color: rgba(255, 255, 255, 0.5);
+  }
+  .fb-map .leaflet-control-attribution a {
+    color: rgba(255, 255, 255, 0.7);
+  }
+</style>

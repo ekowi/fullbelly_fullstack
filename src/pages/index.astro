@@ -1,0 +1,282 @@
+---
+import Layout from "../layouts/Layout.astro";
+import ImagePlaceholder from "../components/ImagePlaceholder.astro";
+
+const experiences = [
+  {
+    href: "/sports",
+    label: "Photo: Stadium",
+    photo:
+      "https://images.unsplash.com/photo-1577416412292-747c6607f055?w=1000&q=70&auto=format&fit=crop",
+    alt: "Empty indoor sports arena",
+    badge: "High Intensity",
+    badgeTone: "brand",
+    title: "Premium Sports",
+    text: "State-of-the-art courts and facilities built for peak performance.",
+    variant: "arrow",
+  },
+  {
+    href: "/menu",
+    label: "Photo: Restaurant",
+    photo:
+      "https://images.unsplash.com/photo-1752758059740-fd250168138e?w=1000&q=70&auto=format&fit=crop",
+    alt: "Dimly lit upscale restaurant interior",
+    badge: "Culinary Excellence",
+    badgeTone: "neutral",
+    title: "The Restaurant",
+    text: "Refined flavors in a sophisticated setting.",
+    variant: "link",
+  },
+  {
+    href: "#cafe",
+    label: "Photo: Cafe",
+    photo:
+      "https://images.unsplash.com/photo-1521017432531-fbd92d768814?w=1400&q=70&auto=format&fit=crop",
+    alt: "Cafe counter with pendant lighting and guests",
+    badge: "Social Hub",
+    badgeTone: "neutral",
+    title: "Artisan Cafe",
+    text: "Your daily ritual elevated. Premium brews and light bites in a relaxed atmosphere.",
+    variant: "button",
+  },
+];
+
+const pillars = [
+  {
+    title: "Architectural Excellence",
+    text: "Spaces designed with purpose, blending industrial aesthetics with warm, inviting materials.",
+    icon: "M3 21h18M5 21V7l7-4 7 4v14M9 21v-6h6v6M9 11h.01M9 15h.01M15 11h.01M15 15h.01",
+  },
+  {
+    title: "Vibrant Atmosphere",
+    text: "A curated community of active, lifestyle-focused individuals.",
+    icon: "M17 20h5v-1a4 4 0 00-3-3.87M9 20H4v-1a4 4 0 013-3.87m5-2.13a4 4 0 100-8 4 4 0 000 8zm7 1a3 3 0 100-6 3 3 0 000 6z",
+  },
+  {
+    title: "Uncompromising Quality",
+    text: "From the maple wood on our courts to the locally sourced ingredients in our kitchen.",
+    icon: "M9 12l2 2 4-4m5 2a9 9 0 11-18 0 9 9 0 0118 0z",
+  },
+];
+---
+
+<Layout activeNav="home">
+  <!-- Hero -->
+  <section class="relative isolate overflow-hidden">
+    <div class="grain absolute inset-0 -z-10">
+      <ImagePlaceholder
+        label="Photo: Sports Court"
+        src="https://images.unsplash.com/photo-1778180883807-19962eda4d99?w=1920&q=75&auto=format&fit=crop"
+        alt="Aerial view of illuminated outdoor courts at night"
+        class="h-full w-full"
+      />
+      <div class="absolute inset-0 bg-linear-to-t from-ink via-ink/85 to-ink/40"></div>
+      <div class="absolute inset-0 bg-linear-to-r from-ink/90 via-ink/40 to-transparent"></div>
+    </div>
+
+    <div class="mx-auto max-w-7xl px-6 py-28 lg:px-10 lg:py-40">
+      <span
+        class="inline-flex items-center gap-2 rounded-full border border-white/15 bg-white/5 px-4 py-1.5 text-xs font-semibold tracking-widest text-white/70 uppercase backdrop-blur"
+      >
+        <span class="h-1.5 w-1.5 rounded-full bg-brand"></span>
+        Welcome to the Future of Leisure
+      </span>
+
+      <h1
+        class="mt-7 max-w-3xl text-[clamp(1.9rem,9vw,4.5rem)] leading-[1.05] font-extrabold text-white"
+      >
+        Dynamic<br />
+        <span class="text-brand">Sophistication</span><br />
+        in Sports &amp; Dining.
+      </h1>
+
+      <p class="mt-7 max-w-xl text-base leading-relaxed text-white/65 sm:text-lg">
+        Experience the perfect synthesis of high-intensity athletics and refined culinary
+        craftsmanship. A premium destination designed for those who play hard and savor every
+        moment.
+      </p>
+
+      <div class="mt-9 flex flex-wrap gap-4">
+        <a
+          href="/sports"
+          class="rounded-xl bg-brand px-6 py-3.5 text-sm font-semibold text-white shadow-xl shadow-brand/25 transition-all hover:bg-brand-dark active:translate-y-0.5"
+        >
+          Explore Venues
+        </a>
+        <a
+          href="/menu"
+          class="rounded-xl border border-white/25 bg-white/5 px-6 py-3.5 text-sm font-semibold text-white backdrop-blur transition-all hover:border-white/50 hover:bg-white/10 active:translate-y-0.5"
+        >
+          View Menus
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- One Destination. Three Experiences. -->
+  <section class="bg-ink px-6 py-24 lg:px-10 lg:py-32">
+    <div class="mx-auto max-w-6xl">
+      <div class="text-center">
+        <p class="eyebrow text-brand">01 &mdash; The Experience</p>
+        <h2 class="mt-4 text-4xl font-extrabold text-white sm:text-5xl">
+          One Destination. <span class="text-brand">Three Experiences.</span>
+        </h2>
+        <p class="mx-auto mt-5 max-w-2xl text-white/55">
+          Curated spaces designed to elevate your lifestyle, whether you're breaking a sweat or
+          sharing a meal.
+        </p>
+      </div>
+
+      <div class="mt-16 grid gap-5 sm:grid-cols-[2fr_1fr]">
+        {
+          experiences.map((exp, i) => (
+            <a
+              href={exp.href}
+              class:list={[
+                "group relative flex flex-col justify-end overflow-hidden rounded-2xl ring-1 ring-white/10 transition-all duration-300 hover:ring-white/25",
+                i === 2 ? "h-55 sm:col-span-2" : "h-75",
+              ]}
+            >
+              <div class="absolute inset-0 overflow-hidden">
+                <ImagePlaceholder
+                  label={exp.label}
+                  src={exp.photo}
+                  alt={exp.alt}
+                  class="h-full w-full transition-transform duration-700 ease-out group-hover:scale-105"
+                />
+              </div>
+              <div class="absolute inset-0 bg-linear-to-t from-black/90 from-5% via-black/10 via-65% to-transparent" />
+
+              <div class="relative p-7">
+                <span
+                  class:list={[
+                    "inline-block rounded-full px-3 py-1 text-xs font-semibold",
+                    exp.badgeTone === "brand"
+                      ? "bg-brand/25 text-brand-soft ring-1 ring-brand/40"
+                      : "bg-white/10 text-white/85 ring-1 ring-white/15",
+                  ]}
+                >
+                  {exp.badge}
+                </span>
+                <h3 class="mt-4 text-2xl font-bold text-white">{exp.title}</h3>
+                <p class="mt-2 max-w-sm text-sm text-white/65">{exp.text}</p>
+                {exp.variant === "link" && (
+                  <span class="mt-3 inline-flex items-center gap-1 text-sm font-semibold text-brand">
+                    View Menu
+                    <span class="transition-transform group-hover:translate-x-1">&rsaquo;</span>
+                  </span>
+                )}
+                {exp.variant === "button" && (
+                  <span class="mt-4 inline-block rounded-full border border-white/25 px-4 py-2 text-xs font-semibold text-white transition-colors group-hover:border-white/60 group-hover:bg-white/5">
+                    Discover More
+                  </span>
+                )}
+              </div>
+
+              {exp.variant === "arrow" && (
+                <span class="absolute right-7 bottom-7 flex h-11 w-11 items-center justify-center rounded-full bg-white/10 text-white ring-1 ring-white/20 backdrop-blur transition-all duration-300 group-hover:bg-brand group-hover:ring-brand">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="h-5 w-5 transition-transform duration-300 group-hover:translate-x-0.5">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M5 12h14M13 6l6 6-6 6" />
+                  </svg>
+                </span>
+              )}
+            </a>
+          ))
+        }
+      </div>
+    </div>
+  </section>
+
+  <!-- More than a venue. A Community. -->
+  <section class="border-t border-white/5 bg-surface px-6 py-24 lg:px-10 lg:py-32">
+    <div class="mx-auto grid max-w-6xl gap-14 lg:grid-cols-2 lg:items-center">
+      <div>
+        <p class="eyebrow text-brand">02 &mdash; The Community</p>
+        <h2 class="mt-4 text-4xl leading-[1.05] font-extrabold text-white sm:text-5xl">
+          More than a venue.<br />A Community.
+        </h2>
+        <p class="mt-6 max-w-md text-white/65">
+          Fullbelly Bogor isn't just about what you do; it's about how you feel while doing it.
+          We've meticulously designed an atmosphere that seamlessly transitions from the
+          adrenaline of the court to the warmth of a shared meal.
+        </p>
+
+        <ul class="mt-10 space-y-7">
+          {
+            pillars.map((pillar) => (
+              <li class="flex gap-4">
+                <span class="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-brand/10 text-brand ring-1 ring-brand/20">
+                  <svg
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="1.6"
+                    class="h-5 w-5"
+                  >
+                    <path stroke-linecap="round" stroke-linejoin="round" d={pillar.icon} />
+                  </svg>
+                </span>
+                <div>
+                  <p class="font-semibold text-white">{pillar.title}</p>
+                  <p class="mt-1 text-sm text-white/55">{pillar.text}</p>
+                </div>
+              </li>
+            ))
+          }
+        </ul>
+      </div>
+
+      <div class="relative">
+        <div class="h-105 overflow-hidden rounded-3xl ring-1 ring-white/10">
+          <ImagePlaceholder
+            label="Photo: Community"
+            src="https://images.unsplash.com/photo-1582298538104-fe2e74c27f59?w=1200&q=70&auto=format&fit=crop"
+            alt="Friends laughing together over coffee"
+          />
+        </div>
+        <div
+          class="absolute -bottom-6 left-6 rounded-2xl bg-ink px-7 py-5 shadow-2xl ring-1 ring-white/10"
+        >
+          <p class="font-display text-3xl font-extrabold text-brand">
+            <span data-countup data-to="5">5</span>k+
+          </p>
+          <p class="mt-0.5 text-xs font-semibold tracking-wide text-white/60 uppercase">
+            Active Members
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+</Layout>
+
+<script>
+  // Count-up the "5k+" stat when it scrolls into view (respects reduced-motion via CSS).
+  const el = document.querySelector<HTMLElement>("[data-countup]");
+  if (el) {
+    const target = Number(el.dataset.to || "0");
+    const run = () => {
+      el.textContent = "0";
+      const duration = 1100;
+      const start = performance.now();
+      const tick = (now: number) => {
+        const p = Math.min((now - start) / duration, 1);
+        const eased = 1 - Math.pow(1 - p, 3);
+        el.textContent = String(Math.round(eased * target));
+        if (p < 1) requestAnimationFrame(tick);
+      };
+      requestAnimationFrame(tick);
+    };
+    const io = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            run();
+            io.disconnect();
+          }
+        });
+      },
+      { threshold: 0.6 }
+    );
+    io.observe(el);
+  }
+</script>

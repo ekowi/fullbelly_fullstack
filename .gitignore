@@ -1,0 +1,58 @@
+# ── Dependencies ──
+node_modules/
+.npm/
+.pnp
+.pnp.js
+
+# ── Astro build output & generated types ──
+dist/
+.astro/
+.output/
+
+# ── Environment / secrets ──
+# Ignore every .env file (they hold DB passwords, Directus & deploy tokens),
+# but keep the shareable template tracked.
+.env*
+!.env.example
+
+# ── Logs ──
+logs/
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+lerna-debug.log*
+
+# ── Deploy platform caches (harmless if unused) ──
+.vercel/
+.netlify/
+
+# ── Test / tooling artifacts (Playwright, if added later) ──
+test-results/
+playwright-report/
+playwright/.cache/
+.eslintcache
+
+# ── Editors ──
+.idea/
+*.swp
+*.swo
+*~
+
+# ── OS files ──
+# macOS
+.DS_Store
+.AppleDouble
+.LSOverride
+# Windows
+Thumbs.db
+Thumbs.db:encryptable
+ehthumbs.db
+Desktop.ini
+$RECYCLE.BIN/
+
+# ── Notes ──
+# Intentionally TRACKED (do not ignore): docker-compose.yml, .env.example,
+# scripts/, package-lock.json, src/, astro.config.mjs, tsconfig.json.
+# Directus uploads & Postgres data live in Docker named volumes, not the repo.

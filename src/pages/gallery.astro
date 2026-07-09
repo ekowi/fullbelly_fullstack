@@ -1,0 +1,144 @@
+---
+import Layout from "../layouts/Layout.astro";
+import ImagePlaceholder from "../components/ImagePlaceholder.astro";
+import MapCard from "../components/MapCard.astro";
+import { getGallery, getSettings, waUrl, imageFor, type GalleryItem } from "../lib/directus";
+
+const gallery = await getGallery();
+const settings = await getSettings();
+
+const spanFor = (layout: GalleryItem["layout"]) =>
+  ({ feature: "col-span-2 row-span-2", tall: "row-span-2", wide: "col-span-2", normal: "" })[
+    layout
+  ] ?? "";
+
+const tiles = gallery.map((g) => ({
+  tag: g.tag,
+  label: g.label,
+  src: imageFor(g),
+  alt: `${g.tag} — ${g.label}`,
+  span: spanFor(g.layout),
+}));
+
+const fullAddress = `${settings.address_line1}, ${settings.address_line2}`;
+const mapsUrl =
+  "https://www.google.com/maps/dir/?api=1&destination=" + encodeURIComponent(fullAddress);
+const waHref = waUrl(settings.whatsapp_number, "Halo Fullbelly Bogor");
+---
+
+<Layout
+  activeNav="gallery"
+  title="Gallery — Fullbelly Bogor"
+  description="A visual tour of Fullbelly Bogor — from high-intensity courts to serene dining spaces."
+>
+  <!-- Visual Experience -->
+  <section class="px-6 pt-20 pb-10 text-center lg:pt-28">
+    <p class="eyebrow text-brand">Gallery</p>
+    <h1 class="mt-4 text-4xl font-extrabold text-white sm:text-5xl md:text-6xl">Visual Experience</h1>
+    <p class="mx-auto mt-5 max-w-2xl text-white/60">
+      Immerse yourself in the dynamic sophistication of Fullbelly Bogor. From high-intensity courts
+      to serene dining spaces.
+    </p>
+  </section>
+
+  <!-- Masonry grid -->
+  <section class="px-6 pb-8 lg:px-10">
+    <div
+      class="mx-auto grid max-w-6xl grid-cols-2 gap-3 [grid-auto-rows:150px] sm:gap-4 md:grid-cols-4 md:[grid-auto-rows:220px]"
+    >
+      {
+        tiles.map((tile) => (
+          <figure
+            class:list={[
+              "group relative overflow-hidden rounded-xl ring-1 ring-white/10 transition-all duration-300 hover:ring-white/25",
+              tile.span,
+            ]}
+          >
+            <ImagePlaceholder
+              label={tile.label}
+              src={tile.src}
+              alt={tile.alt}
+              class="h-full w-full transition-transform duration-700 ease-out group-hover:scale-105"
+            />
+            <div class="absolute inset-0 bg-linear-to-t from-black/75 via-black/5 to-transparent" />
+            <figcaption class="absolute bottom-0 left-0 p-4">
+              <p class="text-[11px] font-semibold tracking-wider text-brand uppercase">{tile.tag}</p>
+              <p class="text-sm font-semibold text-white">{tile.label}</p>
+            </figcaption>
+          </figure>
+        ))
+      }
+    </div>
+  </section>
+
+  <!-- Get in Touch -->
+  <section class="border-t border-white/5 px-6 py-20 lg:px-10 lg:py-28">
+    <div class="mx-auto grid max-w-6xl gap-8 lg:grid-cols-2 lg:items-stretch">
+      <!-- Contact -->
+      <div class="flex flex-col">
+        <p class="eyebrow text-brand">Contact</p>
+        <h2 class="mt-4 text-3xl font-extrabold text-white sm:text-4xl">Get in Touch</h2>
+        <p class="mt-3 max-w-md text-white/60">
+          Whether you're booking a court or reserving a table, we're here to assist you.
+        </p>
+
+        <div class="mt-8 flex-1 rounded-2xl bg-surface p-6 ring-1 ring-white/10 sm:p-8">
+          <div class="flex gap-4">
+            <span class="mt-0.5 flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-brand/10 text-brand ring-1 ring-brand/20">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" class="h-5 w-5">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M12 21s-7-6.5-7-11a7 7 0 1114 0c0 4.5-7 11-7 11z" />
+                <circle cx="12" cy="10" r="2.5" />
+              </svg>
+            </span>
+            <div>
+              <p class="font-semibold text-white">Fullbelly Bogor</p>
+              <p class="mt-1 text-sm text-white/55">
+                {settings.address_line1}<br />{settings.address_line2}
+              </p>
+            </div>
+          </div>
+
+          <div class="mt-6 flex gap-4">
+            <span class="mt-0.5 flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-brand/10 text-brand ring-1 ring-brand/20">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" class="h-5 w-5">
+                <circle cx="12" cy="12" r="9" />
+                <path stroke-linecap="round" stroke-linejoin="round" d="M12 7v5l3 2" />
+              </svg>
+            </span>
+            <div>
+              <p class="font-semibold text-white">Opening Hours</p>
+              <p class="mt-1 text-sm text-white/55">Restaurant: {settings.restaurant_hours}</p>
+              <p class="text-sm text-white/55">Sports Arena: {settings.arena_hours}</p>
+            </div>
+          </div>
+
+          <div class="mt-7 flex flex-wrap items-center gap-3 border-t border-white/10 pt-6">
+            <a
+              href={waHref}
+              target="_blank"
+              rel="noopener"
+              class="inline-flex items-center gap-2 rounded-full bg-brand px-5 py-2.5 text-sm font-semibold text-white transition-all hover:bg-brand-dark active:translate-y-px"
+            >
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" class="h-4 w-4">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M21 11.5a8.38 8.38 0 01-.9 3.8 8.5 8.5 0 01-7.6 4.7 8.38 8.38 0 01-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 01-.9-3.8 8.5 8.5 0 014.7-7.6 8.38 8.38 0 013.8-.9h.5a8.48 8.48 0 018 8v.5z" />
+              </svg>
+              WhatsApp Us
+            </a>
+            <span class="rounded-full px-4 py-2.5 text-sm text-white/70 ring-1 ring-white/15">
+              {settings.instagram_handle}
+            </span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Map -->
+      <MapCard
+        lat={settings.latitude ?? -6.5966}
+        lng={settings.longitude ?? 106.7972}
+        label="Fullbelly Bogor"
+        directionsUrl={mapsUrl}
+        class="min-h-85"
+      />
+    </div>
+  </section>
+</Layout>

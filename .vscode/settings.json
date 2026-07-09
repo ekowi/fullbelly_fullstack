@@ -1,0 +1,6 @@
+{
+    "sonarlint.connectedMode.project": {
+        "connectionId": "https-dev-ekozenlabs-cloud",
+        "projectKey": "ekozen"
+    }
+}
