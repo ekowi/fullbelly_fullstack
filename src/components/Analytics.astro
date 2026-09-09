@@ -1,10 +1,10 @@
 ---
 // Central analytics loader (goes in <head>). OFF by default — a tag only loads
 // when its ID/domain is set. Source of truth = CMS (site_settings, PIC-editable);
-// .env PUBLIC_* is an optional fallback for dev/staging. CMS wins.
+// .env PUBLIC_* is an optional fallback. CMS wins.
 //
-// ⚠️ GTM / GA4 / Meta Pixel pakai cookie → butuh cookie-consent banner (UU PDP).
-//    Plausible / Umami cookieless.
+// ⚠️ GTM / GA4 / Meta Pixel pakai cookie. Consent banner TIDAK dipasang (sesuai
+//    keputusan). Kalau nanti wajib consent (UU PDP), pasang gate terpisah.
 import type { SiteSettings } from "../lib/directus";
 
 interface Props {

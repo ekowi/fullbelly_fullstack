@@ -8,7 +8,7 @@ Website + CMS untuk Fullbelly Bogor (venue olahraga + resto/cafe). **Frontend UI
 - **Frontend UI**: ✅ **selesai** — Astro + Tailwind v4, font display Sora, aksen oranye. Halaman **Home, Menu, Sports, Gallery**. Responsif (diverifikasi s/d 320px), mobile nav hamburger + drawer, micro-interactions. Dev server bisa diakses LAN (`server.host` di config) untuk tes HP.
 - **CMS (Directus)**: ✅ **terintegrasi (lokal)** — Postgres + Directus via Docker Compose. Collections `menu_items`, `facilities`, `gallery`, `site_settings` dibuat + ter-seed. **Menu, Sports, Gallery, header, footer ambil data dari CMS**. **Role PIC** (Content Editor, non-admin) sudah dibuat — hanya edit konten, tak bisa ubah struktur. Alur edit terbukti.
 - **Map**: ✅ "Get in Touch" pakai **peta gelap interaktif** (Leaflet + CartoDB dark), pin dari `site_settings.latitude/longitude` (CMS-driven).
-- **Analytics**: ✅ **siap pakai, mati by default**. Slot GTM / GA4 / Meta Pixel / Plausible / Umami di `Analytics.astro`. Aktifkan dengan isi ID di **CMS Site Settings** (PIC bisa) atau `.env` — kosong = tidak load apa pun.
+- **Analytics**: ✅ **siap pakai, mati by default**. Slot GTM / GA4 / Meta Pixel / Plausible / Umami (`Analytics.astro`) — aktifkan via **CMS Site Settings** (PIC) atau `.env`. Load langsung saat ID diisi. Cookie-consent banner **tidak dipasang** (keputusan); kalau nanti wajib UU PDP, tambah gate terpisah.
 - **Booking**: halaman **dihapus** dari nav. CTA "Book Now" / "Book Court" → **WhatsApp** (nomor dari `site_settings.whatsapp_number`, masih placeholder `6281234567890`).
 - **Masih hardcoded**: halaman **Home** (hero + kartu "Three Experiences" + pillars — konten marketing, jarang berubah). Gambar disimpan sebagai **URL string** (placeholder Unsplash), belum upload file Directus.
 - **Belum (Fase C)**: deploy ke VPS/hosting. Opsional: upgrade gambar ke file-upload, koordinat pin asli, Home ke CMS.
@@ -87,8 +87,7 @@ docker compose logs -f directus | docker compose down
 - ✅ B5 Map gelap interaktif (Leaflet + CartoDB), pin CMS-driven (`site_settings.lat/lng`) — `MapCard.astro`
 - ✅ B6 Gambar dual: field **Image URL** (paste) **atau** **Image** (upload file) — situs prefer file, fallback URL (`scripts/add-image-file-field.mjs`, helper `imageFor()`)
 - ✅ B7 Slot analytics siap-pakai (GTM/GA4/Meta Pixel/Plausible/Umami), mati default, on/off dari CMS atau `.env` (`Analytics.astro`, `scripts/add-analytics-fields.mjs`)
-- ⬜ B8 (opsional) Island client-side untuk data panas (status lapangan real-time)
-- ⬜ B9 (opsional, saat pakai GTM/GA/Meta) Cookie-consent banner (UU PDP)
+- ⬜ B8 (ditunda ke Fase C) Island client-side data panas (status lapangan real-time) — butuh API Directus publik + CORS
 
 ### Fase C — Deploy & Ops
 - ⬜ C1 Provisioning VPS (Ubuntu LTS, hardening SSH/UFW/fail2ban, Docker + Compose, swapfile)
